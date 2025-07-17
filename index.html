@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stakeholder Engagement in Da Giuseppe Project</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f2f2f2; /* Light grey brand color */
+            color: #333;
+            display: flex;
+            justify-content: flex-start; /* Left align content on the page */
+            align-items: flex-start; /* Align to top */
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 1200px;
+            width: 100%;
+            text-align: left; /* Left-align text within the container */
+        }
+        .header {
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #025159; /* Dark blue/green brand color */
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 1.125rem;
+            color: #555;
+        }
+
+        /* Main layout for image column and dynamically revealed content row */
+        .main-content-area {
+            display: flex;
+            gap: 30px; /* Space between the image column and the content row */
+            width: 100%;
+            justify-content: flex-start; /* Ensure left alignment of columns */
+            align-items: flex-start; /* Align items to the top */
+        }
+
+        .image-column {
+            display: flex;
+            flex-direction: column; /* Images stacked vertically */
+            gap: 25px;
+            flex-shrink: 0; /* Prevent shrinking */
+            width: 180px; /* Fixed width for the image column */
+            align-items: flex-start; /* Align cards to the start within the column */
+        }
+
+        .stakeholder-card {
+            background-color: #96ccd9; /* Light blue/teal brand color */
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            width: 100%; /* Make cards fill their column width */
+            max-width: 180px; /* Max width for individual card */
+        }
+        .stakeholder-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        .stakeholder-card img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 4px solid #025159; /* Dark blue/green brand color */
+        }
+        .stakeholder-card h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #025159; /* Dark blue/green brand color */
+            margin-bottom: 0;
+        }
+
+        /* Container for the dynamically revealed content row */
+        .details-row-container {
+            flex-grow: 1; /* Allows content to take available space */
+            flex-basis: 0; /* Important for flexible sizing as a flex item */
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            text-align: left;
+            border: 1px solid #e2e8f0;
+            display: none; /* Hidden by default */
+            flex-direction: column; /* Stack header, content columns, and buttons internally */
+        }
+        .details-row-container.open {
+            display: flex; /* Makes it a flex item within main-content-area, appearing horizontally */
+        }
+
+        .details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .details-header h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #025159;
+            margin: 0;
+        }
+        .close-details-button {
+            background-color: #a0aec0;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            color: white;
+            border: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .close-details-button:hover {
+            background-color: #718096;
+        }
+
+        .details-content-columns {
+            display: flex;
+            gap: 20px; /* Space between content columns */
+            flex-wrap: wrap; /* Allow internal columns to wrap if needed */
+            justify-content: flex-start; /* Left align internal content columns */
+        }
+
+        .content-section {
+            flex: 1 1 250px; /* Allow shrinking, growing, base width 250px */
+            min-width: 200px; /* Ensure minimum width for readability */
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background-color: #f8f8f8;
+            border: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .content-section h4 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #025159;
+        }
+        .content-section p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #1a202c; /* Darker text color for all content sections */
+            margin-bottom: 0;
+        }
+
+        .content-section.initial {
+            background-color: #f2d98d; /* Light yellow/gold brand color */
+            border-color: #d98e04; /* Dark orange/gold brand color */
+        }
+        .content-section.challenge {
+            background-color: #ffe0b2; /* A shade of orange for challenge */
+            border-color: #d98e04;
+        }
+        .content-section.consult {
+            background-color: #96ccd9; /* Light blue/teal brand color */
+            border-color: #025159;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: flex-start; /* Left align buttons */
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .action-buttons button {
+            background-color: #d98e04; /* Dark orange/gold brand color */
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .action-buttons button:hover {
+            background-color: #a86b03; /* Darker shade for hover */
+            transform: translateY(-2px);
+        }
+        .action-buttons button:active {
+            transform: translateY(0);
+        }
+
+        /* Styling for the new consultant image button */
+        .consultant-image-button {
+            background-color: #025159; /* Dark blue/green brand color for the button background */
+            border-radius: 50%; /* Make it circular */
+            width: 70px; /* Size of the button */
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            border: 3px solid #f2d98d; /* Yellow border for contrast */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            padding: 5px; /* Padding inside the circular button */
+        }
+        .consultant-image-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+        .consultant-image-button img {
+            width: 60px; /* Size of the image inside the button */
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0; /* Remove default image margin */
+            border: none; /* Remove default image border */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .main-content-area {
+                flex-direction: column; /* Stack columns vertically on small screens */
+                align-items: center; /* Center items for better mobile view */
+            }
+            .image-column {
+                flex-direction: row; /* Images side-by-side in a row on small screens */
+                flex-wrap: wrap;
+                justify-content: center; /* Center images in row */
+                width: 100%;
+            }
+            .stakeholder-card {
+                width: 150px; /* Smaller cards on mobile */
+                padding: 15px;
+            }
+            .stakeholder-card img {
+                width: 80px;
+                height: 80px;
+            }
+            .details-row-container, .content-section {
+                min-width: unset; /* Remove min-width constraint */
+                width: 100%;
+            }
+            .details-content-columns {
+                flex-direction: column; /* Stack content sections vertically on small screens */
+            }
+            .action-buttons {
+                justify-content: center; /* Center buttons on mobile */
+            }
+            .consultant-image-button {
+                width: 60px;
+                height: 60px;
+            }
+            .consultant-image-button img {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Stakeholder Engagement in the Da Giuseppe Project</h1>
+            <p>Click on each stakeholder's image to reveal their initial expectations, then explore how they evolve during a project challenge, and finally, see the consultant's strategy.</p>
+        </div>
+
+        <div class="main-content-area">
+            <!-- Image Column (Vertical) -->
+            <div class="image-column">
+                <!-- Da Giuseppe -->
+                <div class="stakeholder-card" data-stakeholder="giuseppe">
+                    <img src="Da Giuseppe.png" alt="Da Giuseppe">
+                    <h2>Da Giuseppe</h2>
+                </div>
+
+                <!-- Da Giuseppe's wife -->
+                <div class="stakeholder-card" data-stakeholder="giuseppes-wife">
+                    <img src="Da Giuseppe's wife.png" alt="Da Giuseppe's wife">
+                    <h2>Da Giuseppe's wife</h2>
+                </div>
+
+                <!-- Operations Manager (Son) -->
+                <div class="stakeholder-card" data-stakeholder="operations-manager">
+                    <img src="Operation Manager.png" alt="Operation Manager">
+                    <h2>Operations Manager</h2>
+                </div>
+            </div>
+
+            <!-- Details Row Container (Dynamically Revealed) -->
+            <div id="details-row-container" class="details-row-container">
+                <div class="details-header">
+                    <h3 id="details-stakeholder-name"></h3>
+                    <button class="close-details-button" onclick="closeDetails()">Close</button>
+                </div>
+                <div class="details-content-columns">
+                    <div id="initial-expectation-col" class="content-section initial hidden">
+                        <h4>Initial Expectation</h4>
+                        <p id="initial-expectation-text"></p>
+                    </div>
+                    <div id="challenge-expectation-col" class="content-section challenge hidden">
+                        <h4>Challenge</h4>
+                        <p id="challenge-expectation-text"></p>
+                    </div>
+                    <div id="consult-advice-col" class="content-section consult hidden">
+                        <h4>Consultant's Response</h4>
+                        <p id="consult-advice-text"></p>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button id="challenge-button" onclick="showChallenge()">Challenge</button>
+                    <div id="consultant-image-button" class="consultant-image-button hidden" onclick="showConsultAdvice()">
+                        <img src="Consultant.png" alt="Consultant">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const stakeholdersData = {
+            "giuseppe": {
+                name: "Da Giuseppe",
+                initialExpectation: "Initial: Increase profitability without compromising food quality, staff, or raising prices. Needs a rapid diagnostic study and clear action plan. Wants full staff and family involvement, and increased customer satisfaction.",
+                challengeExpectation: "Challenge: Concerned about staff resistance to new operational changes and maintaining high food safety standards during implementation. Fears losing loyal customers if changes aren't handled perfectly, especially with new regulations.",
+                consultAdvice: "To help Giuseppe, we'll tackle changes together, bit by bit. We'll have 'kitchen table' chats with your family and staff to get everyone's ideas. We'll try new things in a small way first, like a 'test run,' and keep everyone in the loop with quick updates. We'll also do a 'health check' on food safety and give hands-on training to make sure everything's spotless. And we'll listen closely to what customers say, so we can make them even happier!"
+            },
+            "giuseppes-wife": {
+                name: "Da Giuseppe's wife",
+                initialExpectation: "Initial: Maintain the high quality and authenticity of the food. Ensure kitchen operations remain efficient and do not become overly complicated by new processes. Wants to protect the restaurant's reputation for excellent cuisine.",
+                challengeExpectation: "Challenge: Worried that new cost-saving measures or process changes might negatively impact ingredient quality or traditional cooking methods, potentially alienating long-standing customers. Concerned about increased workload or complexity in the kitchen.",
+                consultAdvice: "For Giuseppe's wife, we'll focus on keeping that amazing food quality while making things smoother. We'll look at where we buy ingredients to see if we can get smart about costs without touching quality. We'll work side-by-side in the kitchen to find little ways to save time or effort. We'll even do 'secret shopper' taste tests to make sure customers still love everything. Any new tools will come with simple, clear training, and we'll show how these changes actually free up her time."
+            },
+            "operations-manager": {
+                name: "Operations Manager (Son)",
+                initialExpectation: "Initial: Improve efficiency in front-of-house, take-away, and home delivery. Wants to leverage technology and modern marketing to attract new customers and streamline ordering processes. Open to innovation to boost sales.",
+                challengeExpectation: "Challenge: Frustrated by slow adoption of new technology by some long-term staff, and the perceived high cost of new marketing initiatives without immediate, tangible returns. Concerned about balancing traditional customer service with digital efficiency.",
+                consultAdvice: "For the son, we'll make technology work for him, not against him. We'll give staff easy, step-by-step training on new ordering or delivery tech. We'll roll out new digital ideas slowly, showing everyone how they actually make things easier and bring in more customers. We'll also track exactly what's working with marketing, so he sees real results. The goal is to blend our great personal service with smart digital tools, maybe even with a fun 'tech challenge' for staff to encourage new ways of working."
+            },
+            // The 'consultant' data is kept here to provide the generic response when the consultant image is clicked,
+            // but its 'initialExpectation' and 'challengeExpectation' are not directly used for display in this setup.
+            "consultant": {
+                name: "Consultant",
+                initialExpectation: "Initial: Conduct a thorough diagnostic study within 2 months to identify root causes of declining profits. Deliver practical, implementable recommendations that respect the client's non-negotiables (no staff cuts, no quality compromise, wary of price increases).",
+                challengeExpectation: "Challenge: Encountering resistance to proposed operational changes from long-term staff, and a need to ensure strict adherence to new food safety regulations while implementing new processes, without disrupting daily operations or customer satisfaction.",
+                consultAdvice: "My approach is to be a flexible partner, working closely with everyone. This means we'll constantly check in on our plan, making sure it fits the restaurant's real-time needs. We'll help find a 'change champion' within the team to lead new ideas. For food safety, we'll build in simple, regular checks. We'll also make sure to celebrate every small win and keep an 'open door' for any staff ideas or concerns, making sure everyone feels heard and part of the success."
+            }
+        };
+
+        let currentStakeholderKey = null;
+        const detailsRowContainer = document.getElementById('details-row-container');
+        const detailsStakeholderName = document.getElementById('details-stakeholder-name');
+        const initialExpectationCol = document.getElementById('initial-expectation-col');
+        const initialExpectationText = document.getElementById('initial-expectation-text');
+        const challengeExpectationCol = document.getElementById('challenge-expectation-col');
+        const challengeExpectationText = document.getElementById('challenge-expectation-text');
+        const consultAdviceCol = document.getElementById('consult-advice-col');
+        const consultAdviceText = document.getElementById('consult-advice-text');
+        const challengeButton = document.getElementById('challenge-button');
+        const consultantImageButton = document.getElementById('consultant-image-button');
+
+        function openStakeholderDetails(stakeholderKey) {
+            currentStakeholderKey = stakeholderKey;
+            const data = stakeholdersData[currentStakeholderKey];
+
+            // Reset visibility for content columns and buttons
+            initialExpectationCol.classList.add('hidden');
+            challengeExpectationCol.classList.add('hidden');
+            consultAdviceCol.classList.add('hidden');
+            challengeButton.classList.add('hidden');
+            consultantImageButton.classList.add('hidden');
+
+            // Populate initial expectation and show its column
+            detailsStakeholderName.innerText = data.name;
+            initialExpectationText.innerText = data.initialExpectation;
+            initialExpectationCol.classList.remove('hidden');
+
+            // Show the details row container and the challenge button
+            detailsRowContainer.classList.add('open');
+            challengeButton.classList.remove('hidden');
+        }
+
+        function showChallenge() {
+            const data = stakeholdersData[currentStakeholderKey];
+            challengeExpectationText.innerText = data.challengeExpectation;
+            challengeExpectationCol.classList.remove('hidden'); // Show challenge column
+            challengeButton.classList.add('hidden'); // Hide challenge button
+            consultantImageButton.classList.remove('hidden'); // Show consultant image button
+        }
+
+        function showConsultAdvice() {
+            const data = stakeholdersData[currentStakeholderKey];
+            // NOW THIS IS THE CRUCIAL CHANGE:
+            // It uses the consultAdvice from the CURRENT stakeholder, not the generic 'consultant' entry.
+            consultAdviceText.innerText = data.consultAdvice;
+            consultAdviceCol.classList.remove('hidden'); // Show consultant advice column
+            consultantImageButton.classList.add('hidden'); // Hide consultant image button
+        }
+
+        function closeDetails() {
+            detailsRowContainer.classList.remove('open');
+            currentStakeholderKey = null;
+        }
+
+        // Add event listeners to stakeholder cards
+        document.querySelectorAll('.stakeholder-card').forEach(card => {
+            card.addEventListener('click', () => {
+                openStakeholderDetails(card.dataset.stakeholder);
+            });
+        });
+    </script>
+</body>
+</html>
