@@ -289,19 +289,19 @@
             <div class="image-column">
                 <!-- Da Giuseppe -->
                 <div class="stakeholder-card" data-stakeholder="giuseppe">
-                    <img src="Da Giuseppe.png" alt="Da Giuseppe">
+                    <img src="https://placehold.co/100x100/025159/FFF?text=DG" alt="Da Giuseppe" onerror="this.onerror=null;this.src='https://placehold.co/100x100/025159/FFF?text=DG';">
                     <h2>Da Giuseppe</h2>
                 </div>
 
                 <!-- Da Giuseppe's wife -->
                 <div class="stakeholder-card" data-stakeholder="giuseppes-wife">
-                    <img src="Da Giuseppe's wife.png" alt="Da Giuseppe's wife">
+                    <img src="https://placehold.co/100x100/025159/FFF?text=Wife" alt="Da Giuseppe's wife" onerror="this.onerror=null;this.src='https://placehold.co/100x100/025159/FFF?text=Wife';">
                     <h2>Da Giuseppe's wife</h2>
                 </div>
 
                 <!-- Operations Manager (Son) -->
                 <div class="stakeholder-card" data-stakeholder="operations-manager">
-                    <img src="Operation Manager.png" alt="Operation Manager">
+                    <img src="https://placehold.co/100x100/025159/FFF?text=Son" alt="Operation Manager" onerror="this.onerror=null;this.src='https://placehold.co/100x100/025159/FFF?text=Son';">
                     <h2>Operations Manager</h2>
                 </div>
             </div>
@@ -329,7 +329,7 @@
                 <div class="action-buttons">
                     <button id="challenge-button" onclick="showChallenge()">Challenge</button>
                     <div id="consultant-image-button" class="consultant-image-button hidden" onclick="showConsultAdvice()">
-                        <img src="Consultant.png" alt="Consultant">
+                        <img src="https://placehold.co/60x60/F2D98D/025159?text=C" alt="Consultant" onerror="this.onerror=null;this.src='https://placehold.co/60x60/F2D98D/025159?text=C';">
                     </div>
                 </div>
             </div>
@@ -386,8 +386,9 @@
             initialExpectationCol.classList.add('hidden');
             challengeExpectationCol.classList.add('hidden');
             consultAdviceCol.classList.add('hidden');
-            challengeButton.classList.add('hidden');
-            consultantImageButton.classList.add('hidden');
+            // --- MODIFIED: Use style.display for robust hiding ---
+            challengeButton.style.display = 'none';
+            consultantImageButton.style.display = 'none';
 
             // Populate initial expectation and show its column
             detailsStakeholderName.innerText = data.name;
@@ -396,15 +397,18 @@
 
             // Show the details row container and the challenge button
             detailsRowContainer.classList.add('open');
-            challengeButton.classList.remove('hidden');
+            // --- MODIFIED: Use style.display to show. 'inline-flex' matches button CSS ---
+            challengeButton.style.display = 'inline-flex';
         }
 
         function showChallenge() {
             const data = stakeholdersData[currentStakeholderKey];
             challengeExpectationText.innerText = data.challengeExpectation;
             challengeExpectationCol.classList.remove('hidden'); // Show challenge column
-            challengeButton.classList.add('hidden'); // Hide challenge button
-            consultantImageButton.classList.remove('hidden'); // Show consultant image button
+            
+            // --- MODIFIED: Use style.display for robust hiding/showing ---
+            challengeButton.style.display = 'none'; // Hide challenge button
+            consultantImageButton.style.display = 'flex'; // Show consultant image button (its CSS display type is flex)
         }
 
         function showConsultAdvice() {
@@ -413,7 +417,10 @@
             // It uses the consultAdvice from the CURRENT stakeholder, not the generic 'consultant' entry.
             consultAdviceText.innerText = data.consultAdvice;
             consultAdviceCol.classList.remove('hidden'); // Show consultant advice column
-            consultantImageButton.classList.add('hidden'); // Hide consultant image button
+
+            // --- MODIFIED: Use style.display for robust hiding ---
+            consultantImageButton.style.display = 'none'; // Hide consultant image button
+            challengeButton.style.display = 'none'; // Explicitly hide the challenge button
         }
 
         function closeDetails() {
@@ -427,6 +434,16 @@
                 openStakeholderDetails(card.dataset.stakeholder);
             });
         });
+
+        // --- IMAGE FALLBACKS ---
+        // Replace image URLs with placeholders and add error handling
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('[data-stakeholder="giuseppe"] img').src = "Da Giuseppe.png";
+            document.querySelector('[data-stakeholder="giuseppes-wife"] img').src = "Da Giuseppe's wife.png";
+            document.querySelector('[data-stakeholder="operations-manager"] img').src = "Operation Manager.png";
+            document.querySelector('#consultant-image-button img').src = "Consultant.png";
+        });
     </script>
 </body>
 </html>
+
